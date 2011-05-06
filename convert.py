@@ -92,6 +92,17 @@ body,p,h1,h2,h3,span,div,ol,ul,li,table,tr,td,th,a {
 		style.write(css)
 		style.close()
 		
+		#read style.css to add font family
+		style= open('./epubtmp/OPS/style.css','r')
+		css=style.read()
+		css=css.replace("}","\tfont-family:Zawgyi-One;\n}")
+		style.close()
+		
+		#write update file
+		style= open('./epubtmp/OPS/style.css','w')
+		style.write(css)
+		style.close()
+		
 		#check output folder
 		if not os.path.exists("./output"):
 		    os.makedirs("output")
