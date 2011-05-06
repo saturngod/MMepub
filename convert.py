@@ -14,10 +14,48 @@ def zipper(dir, zip_file):
     zip.close()
     return zip_file
 
+Zawgyicss ='''
+@font-face {
+font-family : "Zawgyi-One";
+font-weight : normal;
+font-style: normal;
+src: url('zawgyi.ttf');
+}
+
+@font-face {
+font-family : "Zawgyi-One";
+font-weight : normal;
+font-style: italic;
+src: url('zawgyi.ttf');
+}
+
+@font-face {
+font-family : "Zawgyi-One";
+font-weight : bold;
+font-style: normal;
+src: url('zawgyi.ttf');
+}
+
+@font-face {
+font-family : "Zawgyi-One";
+font-weight : bold;
+font-style: italic;
+src: url('zawgyi.ttf');
+}
+
+body,p,h1,h2,h3,span,div,ol,ul,li,table,tr,td,th,a {
+font-family : "Zawgyi-One" !important;
+font-weight : normal;
+font-style: normal;
+-webkit-hyphens:none;
+}
+'''
 
 dirList=os.listdir("./")
 for fname in dirList:
     if fname[-4:]=="epub" :
+	
+		#check pages epub or epubgen
 		#converting start
 		zip_ref=zipfile.ZipFile(fname,'r')
 		zip_ref.extractall('./epubtmp')
@@ -25,73 +63,60 @@ for fname in dirList:
 		
 		#copy file
 		shutil.copy("data/com.apple.ibooks.display-options.xml","epubtmp/META-INF/")
-		shutil.copy("data/zawgyi.ttf","epubtmp/OPS/")
 		
-		#add file
-		style= open('./epubtmp/OPS/global.css','r')
-		tmpcss=style.read()
-		style.close()
 		
-		css ='''
-@font-face {
-	font-family : "Zawgyi-One";
-	font-weight : normal;
-	font-style: normal;
-	src: url('zawgyi.ttf');
-}
-
-@font-face {
-	font-family : "Zawgyi-One";
-	font-weight : normal;
-	font-style: italic;
-	src: url('zawgyi.ttf');
-}
-
-@font-face {
-	font-family : "Zawgyi-One";
-	font-weight : bold;
-	font-style: normal;
-	src: url('zawgyi.ttf');
-}
-
-@font-face {
-	font-family : "Zawgyi-One";
-	font-weight : bold;
-	font-style: italic;
-	src: url('zawgyi.ttf');
-}
-
-body,p,h1,h2,h3,span,div,ol,ul,li,table,tr,td,th,a {
-	font-family : "Zawgyi-One" !important;
-	font-weight : normal;
-	font-style: normal;
-	-webkit-hyphens:none;
-}
-		'''
-		css=tmpcss+"\n"+css
+		#if not pages epub
+		if not os.path.exists("./epubtmp/OPS/css/book.css"):
+			#copy zawgyi file
+			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/")
+			
+			#add file
+			style= open('./epubtmp/OPS/global.css','r')
+			tmpcss=style.read()
+			style.close()
 		
-		style= open('./epubtmp/OPS/global.css','w')
-		style.write(css)
-		style.close()
+			css=tmpcss+"\n"+Zawgyicss
 		
-		#read style.css to add font family
-		style= open('./epubtmp/OPS/style.css','r')
-		css=style.read()
-		css=css.replace("}","\tfont-family:Zawgyi-One;\n}")
-		style.close()
+			style= open('./epubtmp/OPS/global.css','w')
+			style.write(css)
+			style.close()
 		
-		#write update file
-		style= open('./epubtmp/OPS/style.css','w')
-		style.write(css)
-		style.close()
+			#read style.css to add font family
+			style= open('./epubtmp/OPS/style.css','r')
+			css=style.read()
+			css=css.replace("}","\tfont-family:Zawgyi-One;\n}")
+			style.close()
+		
+			#write update file
+			style= open('./epubtmp/OPS/style.css','w')
+			style.write(css)
+			style.close()
+		
+			
+		elif os.path.exists("./epubtmp/OPS/css/book.css"):
+			#copy zawgyi file
+			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/css/")
+			
+			#add file
+			style= open('./epubtmp/OPS/css/book.css','r')
+			tmpcss=style.read()
+			style.close()
+		
+			tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+			css=Zawgyicss+"\n"+tmpcss
+		
+			style= open('./epubtmp/OPS/css/book.css','w')
+			style.write(css)
+			style.close()
 		
 		#check output folder
 		if not os.path.exists("./output"):
 		    os.makedirs("output")
-		
+	
 		#zip it
 		zipper("./epubtmp","output/"+fname[0:-5]+"_new.epub")
-		
+	
 		#clear direcory
 		shutil.rmtree("./epubtmp")
 		print fname + " is done. Check file in Output folder. New File name"+fname[0:-5]+"_new.epub"
+			
