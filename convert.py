@@ -28,31 +28,11 @@ for fname in dirList:
 		shutil.copy("data/zawgyi.ttf","epubtmp/OPS/")
 		
 		#add file
-		style= open('./epubtmp/OPS/global.css','w')
+		style= open('./epubtmp/OPS/global.css','r')
+		tmpcss=style.read()
+		style.close()
 		
 		css ='''
-body {
-	font-family: Zawgyi-One;
-	font-size: 1.091em;
-}
-body.embed {
-	font-size: 12.0px;
-}
-table {
-	border-spacing: 0px;
-	border-collapse: collapse;
-}
-p {
-	margin-bottom: 0px;
-	margin-top: 0px;
-}
-ul {
-	padding-left: 0px;
-	margin: 0px;
-}
-li.nested {
-	display: block;
-}
 @font-face {
 	font-family : "Zawgyi-One";
 	font-weight : normal;
@@ -88,7 +68,9 @@ body,p,h1,h2,h3,span,div,ol,ul,li,table,tr,td,th,a {
 	-webkit-hyphens:none;
 }
 		'''
+		css=tmpcss+"\n"+css
 		
+		style= open('./epubtmp/OPS/global.css','w')
 		style.write(css)
 		style.close()
 		
