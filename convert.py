@@ -54,7 +54,11 @@ font-style: normal;
 dirList=os.listdir("./")
 for fname in dirList:
     if fname[-4:]=="epub" :
-	
+	    
+	    #check tmp folder
+	    if not os.path.exists("./epubtmp"):
+	        os.makedirs("epubtmp")
+		    
 		#check pages epub or epubgen
 		#converting start
 		zip_ref=zipfile.ZipFile(fname,'r')
@@ -65,8 +69,8 @@ for fname in dirList:
 		shutil.copy("data/com.apple.ibooks.display-options.xml","epubtmp/META-INF/")
 		
 		
-		#if not pages epub
-		if not os.path.exists("./epubtmp/OPS/css/book.css"):
+		#if epubgen file
+		if os.path.exists("./epubtmp/OPS/global.css"):
 			#copy zawgyi file
 			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/")
 			
@@ -92,7 +96,7 @@ for fname in dirList:
 			style.write(css)
 			style.close()
 		
-			
+		#if pages epub file	
 		elif os.path.exists("./epubtmp/OPS/css/book.css"):
 			#copy zawgyi file
 			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/css/")
@@ -108,6 +112,24 @@ for fname in dirList:
 			style= open('./epubtmp/OPS/css/book.css','w')
 			style.write(css)
 			style.close()
+		
+		#calibre file
+		elif os.path.exists("./epubtmp/stylesheet.css"):
+		    #copy zawgyi file
+			shutil.copy("data/zawgyi.ttf","epubtmp/")
+			
+			#add file
+			style= open('./epubtmp/stylesheet.css','r')
+			tmpcss=style.read()
+			style.close()
+		
+			tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+			css=Zawgyicss+"\n"+tmpcss
+		
+			style= open('./epubtmp/stylesheet.css','w')
+			style.write(css)
+			style.close()
+		    
 		
 		#check output folder
 		if not os.path.exists("./output"):
