@@ -6,7 +6,7 @@ Requirement
 -----------
 Python 2.7 or later
 
-Support epub generator
+Supported epub generator
 ----------------------
 1. epubgen.jar
 2. pages (export to epub)
