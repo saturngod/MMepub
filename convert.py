@@ -129,6 +129,22 @@ for fname in dirList:
 			style= open('./epubtmp/stylesheet.css','w')
 			style.write(css)
 			style.close()
+		
+		#wp2epub wordpress plugin	
+		elif os.path.exists("./epubtmp/OEBPS/styles/main.css"):
+		    #copy zawgyi file
+		    shutil.copy("data/zawgyi.ttf","epubtmp/OEBPS/styles/")
+		    
+		    #add file
+		    style= open('./epubtmp/OEBPS/styles/main.css','r')
+		    tmpcss=style.read()
+		    style.close()
+		    
+		    tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+		    css=Zawgyicss+"\n"+tmpcss
+		    style= open('./epubtmp/OEBPS/styles/main.css','w')
+		    style.write(css)
+		    style.close()
 		    
 		
 		#check output folder
