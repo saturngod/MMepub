@@ -10,7 +10,8 @@ Supported epub generator
 ----------------------
 1. epubgen.jar
 2. pages (export to epub)
-3. calibre (tested on 0.8)
+3. calibre (tested with version 0.8)
+4. InDesign (tested with CS 5)
 
 How to use
 ----------

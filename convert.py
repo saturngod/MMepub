@@ -2,17 +2,17 @@ import os,zipfile,sys,shutil
 from time import sleep
 #zipper function from http://coreygoldberg.blogspot.com/2009/07/python-zip-directories-recursively.html
 def zipper(dir, zip_file):
-    zip = zipfile.ZipFile(zip_file, 'w', compression=zipfile.ZIP_DEFLATED)
-    root_len = len(os.path.abspath(dir))
-    for root, dirs, files in os.walk(dir):
-        archive_root = os.path.abspath(root)[root_len:]
-        for f in files:
+	zip = zipfile.ZipFile(zip_file, 'w', compression=zipfile.ZIP_DEFLATED)
+	root_len = len(os.path.abspath(dir))
+	for root, dirs, files in os.walk(dir):
+		archive_root = os.path.abspath(root)[root_len:]
+		for f in files:
 			if (f!='.DS_Store'):
 				fullpath = os.path.join(root, f)
 				archive_name = os.path.join(archive_root, f)
 				zip.write(fullpath, archive_name, zipfile.ZIP_DEFLATED)
-    zip.close()
-    return zip_file
+	zip.close()
+	return zip_file
 
 Zawgyicss ='''
 @font-face {
@@ -51,14 +51,40 @@ font-style: normal;
 }
 '''
 
+def make_epub(path,css_file,css_file2=""):
+	shutil.copy("data/zawgyi.ttf",path)
+			
+	#add file
+	style= open(path+css_file,'r')
+	tmpcss=style.read()
+	style.close()
+			
+	tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+	css=Zawgyicss+"\n"+tmpcss
+	style= open(path+css_file,'w')
+	style.write(css)
+	style.close()
+
+	if(css_file2!=""):
+		#add file
+		style= open(path+css_file2,'r')
+		tmpcss=style.read()
+		style.close()
+				
+		tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+		css=Zawgyicss+"\n"+tmpcss
+		style= open(path+css_file2,'w')
+		style.write(css)
+		style.close()
+
 dirList=os.listdir("./")
 for fname in dirList:
-    if fname[-4:]=="epub" :
-	    
-	    #check tmp folder
-	    if not os.path.exists("./epubtmp"):
-	        os.makedirs("epubtmp")
-		    
+	if fname[-4:]=="epub" :
+		
+		#check tmp folder
+		if not os.path.exists("./epubtmp"):
+			os.makedirs("epubtmp")
+			
 		#check pages epub or epubgen
 		#converting start
 		zip_ref=zipfile.ZipFile(fname,'r')
@@ -71,90 +97,32 @@ for fname in dirList:
 		
 		#if epubgen file
 		if os.path.exists("./epubtmp/OPS/global.css"):
-			#copy zawgyi file
-			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/")
-			
-			#add file
-			style= open('./epubtmp/OPS/global.css','r')
-			tmpcss=style.read()
-			style.close()
-		
-			css=tmpcss+"\n"+Zawgyicss
-		
-			style= open('./epubtmp/OPS/global.css','w')
-			style.write(css)
-			style.close()
-		
-			#read style.css to add font family
-			style= open('./epubtmp/OPS/style.css','r')
-			css=style.read()
-			css=css.replace("}","\tfont-family:Zawgyi-One;\n}")
-			style.close()
-		
-			#write update file
-			style= open('./epubtmp/OPS/style.css','w')
-			style.write(css)
-			style.close()
+			make_epub("./epubtmp/OPS/","global.css","style.css");
 		
 		#if pages epub file	
 		elif os.path.exists("./epubtmp/OPS/css/book.css"):
-			#copy zawgyi file
-			shutil.copy("data/zawgyi.ttf","epubtmp/OPS/css/")
-			
-			#add file
-			style= open('./epubtmp/OPS/css/book.css','r')
-			tmpcss=style.read()
-			style.close()
-		
-			tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
-			css=Zawgyicss+"\n"+tmpcss
-		
-			style= open('./epubtmp/OPS/css/book.css','w')
-			style.write(css)
-			style.close()
+			make_epub("./epubtmp/OPS/css/","book.css");
 		
 		#calibre file
 		elif os.path.exists("./epubtmp/stylesheet.css"):
-		    #copy zawgyi file
-			shutil.copy("data/zawgyi.ttf","epubtmp/")
-			
-			#add file
-			style= open('./epubtmp/stylesheet.css','r')
-			tmpcss=style.read()
-			style.close()
-		
-			tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
-			css=Zawgyicss+"\n"+tmpcss
-		
-			style= open('./epubtmp/stylesheet.css','w')
-			style.write(css)
-			style.close()
+			make_epub("./epubtmp/","stylesheet.css");
 		
 		#wp2epub wordpress plugin	
 		elif os.path.exists("./epubtmp/OEBPS/styles/main.css"):
-		    #copy zawgyi file
-		    shutil.copy("data/zawgyi.ttf","epubtmp/OEBPS/styles/")
-		    
-		    #add file
-		    style= open('./epubtmp/OEBPS/styles/main.css','r')
-		    tmpcss=style.read()
-		    style.close()
-		    
-		    tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
-		    css=Zawgyicss+"\n"+tmpcss
-		    style= open('./epubtmp/OEBPS/styles/main.css','w')
-		    style.write(css)
-		    style.close()
-		    
+			make_epub("./epubtmp/OEBPS/styles/","main.css");
+		
+		#indesigin
+		elif os.path.exists("./epubtmp/OEBPS/template.css"):
+			make_epub("./epubtmp/OEBPS/","template.css");
+			
 		
 		#check output folder
 		if not os.path.exists("./output"):
-		    os.makedirs("output")
+			os.makedirs("output")
 	
 		#zip it
 		zipper("./epubtmp","output/"+fname[0:-5]+"_new.epub")
 	
 		#clear direcory
 		shutil.rmtree("./epubtmp")
-		print fname + " is done. Check file in Output folder. New File name"+fname[0:-5]+"_new.epub"
-			
+		print fname + " is done. Check file in Output folder. New File name "+fname[0:-5]+"_new.epub"
