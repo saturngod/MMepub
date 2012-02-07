@@ -1,4 +1,4 @@
-import os,zipfile,sys,shutil
+import os,zipfile,sys,shutil,cover
 from time import sleep
 #zipper function from http://coreygoldberg.blogspot.com/2009/07/python-zip-directories-recursively.html
 def zipper(dir, zip_file):
@@ -14,37 +14,65 @@ def zipper(dir, zip_file):
 	zip.close()
 	return zip_file
 
+if (len(sys.argv) > 2):
+    font_family = sys.argv[1]
+    font_file = sys.argv[2]
+else:
+	font_family = "Zawgyi-One"
+	font_file = "zawgyi.ttf"
+
+if not os.path.exists("data/"+font_file):
+	print "There is no "+font_file+" in data folder"
+	sys.exit()
+
 Zawgyicss ='''
 @font-face {
-font-family : "Zawgyi-One";
+font-family : "'''
+
+Zawgyicss=Zawgyicss+font_family+'''";
 font-weight : normal;
 font-style: normal;
-src: url('zawgyi.ttf');
+src: url("'''
+
+Zawgyicss=Zawgyicss+font_file+'''");
 }
 
 @font-face {
-font-family : "Zawgyi-One";
+font-family : "'''
+
+Zawgyicss=Zawgyicss+font_family+'''";
 font-weight : normal;
 font-style: italic;
-src: url('zawgyi.ttf');
+src: url("'''
+Zawgyicss=Zawgyicss+font_file+'''");
 }
 
 @font-face {
-font-family : "Zawgyi-One";
+font-family : "'''
+
+Zawgyicss=Zawgyicss+font_family+'''";
 font-weight : bold;
 font-style: normal;
-src: url('zawgyi.ttf');
+src: url("'''
+
+Zawgyicss=Zawgyicss+font_file+'''");
 }
 
 @font-face {
-font-family : "Zawgyi-One";
+font-family : "'''
+
+Zawgyicss=Zawgyicss+font_family+'''";
 font-weight : bold;
 font-style: italic;
-src: url('zawgyi.ttf');
+src: url("'''
+
+Zawgyicss=Zawgyicss+font_file+'''");
 }
 
 body,p,h1,h2,h3,span,div,ol,ul,li,table,tr,td,th,a {
-font-family : "Zawgyi-One" !important;
+font-family : "'''
+
+Zawgyicss=Zawgyicss+font_family+'''" !important;
 font-weight : normal;
 font-style: normal;
 -webkit-hyphens:none;
@@ -52,14 +80,14 @@ font-style: normal;
 '''
 
 def make_epub(path,css_file,css_file2=""):
-	shutil.copy("data/zawgyi.ttf",path)
+	shutil.copy("data/"+font_file,path)
 			
 	#add file
 	style= open(path+css_file,'r')
 	tmpcss=style.read()
 	style.close()
 			
-	tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+	tmpcss=tmpcss.replace("}","\tfont-family:'"+font_family+"';\n}")
 	css=Zawgyicss+"\n"+tmpcss
 	style= open(path+css_file,'w')
 	style.write(css)
@@ -71,7 +99,7 @@ def make_epub(path,css_file,css_file2=""):
 		tmpcss=style.read()
 		style.close()
 				
-		tmpcss=tmpcss.replace("}","\tfont-family:Zawgyi-One;\n}")
+		tmpcss=tmpcss.replace("}","\tfont-family:"+font_family+";\n}")
 		css=Zawgyicss+"\n"+tmpcss
 		style= open(path+css_file2,'w')
 		style.write(css)
@@ -116,6 +144,9 @@ for fname in dirList:
 			make_epub("./epubtmp/OEBPS/","template.css");
 			
 		
+		#cover
+		cover.replace_cover(fname[0:-5]+".png")
+
 		#check output folder
 		if not os.path.exists("./output"):
 			os.makedirs("output")
@@ -123,6 +154,8 @@ for fname in dirList:
 		#zip it
 		zipper("./epubtmp","output/"+fname[0:-5]+"_new.epub")
 	
+		
+
 		#clear direcory
-		shutil.rmtree("./epubtmp")
+		#shutil.rmtree("./epubtmp")
 		print fname + " is done. Check file in Output folder. New File name "+fname[0:-5]+"_new.epub"
