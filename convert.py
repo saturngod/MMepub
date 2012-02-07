@@ -145,7 +145,8 @@ for fname in dirList:
 			
 		
 		#cover
-		cover.replace_cover(fname[0:-5]+".png")
+		if os.path.exists(fname[0:-5]+".png"):
+			cover.replace_cover(fname[0:-5]+".png")
 
 		#check output folder
 		if not os.path.exists("./output"):
@@ -157,5 +158,5 @@ for fname in dirList:
 		
 
 		#clear direcory
-		#shutil.rmtree("./epubtmp")
+		shutil.rmtree("./epubtmp")
 		print fname + " is done. Check file in Output folder. New File name "+fname[0:-5]+"_new.epub"
