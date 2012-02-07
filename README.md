@@ -26,6 +26,7 @@ Font File
 If you want to use custom file , add font.ttf in data/[your font file].ttf
 
 Example :
+	
 	$python convert.py Yunghkio yunghkio.ttf
 
 yunghkio.ttf must be in *data* folder (**data/yunghkio.ttf**)
