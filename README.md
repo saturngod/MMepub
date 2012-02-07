@@ -1,4 +1,4 @@
-This version is alpha version and written on python 2.7.1
+This version is 1.5 alpha version and written on python 2.7.1
 
 
 Requirement
