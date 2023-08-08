@@ -22,7 +22,7 @@ else:
 	font_file = "zawgyi.ttf"
 
 if not os.path.exists("data/"+font_file):
-	print "There is no "+font_file+" in data folder"
+	print ("There is no "+font_file+" in data folder")
 	sys.exit()
 
 Zawgyicss ='''
@@ -159,4 +159,4 @@ for fname in dirList:
 
 		#clear direcory
 		shutil.rmtree("./epubtmp")
-		print fname + " is done. Check file in Output folder. New File name "+fname[0:-5]+"_new.epub"
+		print (fname + " is done. Check file in Output folder. New File name "+fname[0:-5]+"_new.epub")

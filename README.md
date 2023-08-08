@@ -1,9 +1,9 @@
-This version is 1.5 alpha version and written on python 2.7.1
+This version is 1.5 alpha version and written on python 3
 
 
 Requirement
 ===========
-Python 2.7 or later
+Python 3 or later
 
 Supported epub generator
 ===========
@@ -27,9 +27,9 @@ If you want to use custom file , add font.ttf in data/[your font file].ttf
 
 Example :
 	
-	$python convert.py Yunghkio yunghkio.ttf
+	$python3 convert.py "Pyidaungsu" Pyidaungsu-Book.ttf
 
-yunghkio.ttf must be in *data* folder (**data/yunghkio.ttf**)
+Pyidaungsu-Book.ttf must be in *data* folder (**data/Pyidaungsu-Book.ttf**)
 
 
 Add Cover
@@ -53,6 +53,9 @@ Read more about bug in [here](http://stackoverflow.com/questions/2928373/extract
 Change Log
 ==========
 
+**Aug 8, version 1.6**
+
+* Fixed for pyhton3
 
 **Feb 8 , version 1.5**
 
